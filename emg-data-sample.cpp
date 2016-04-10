@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <myo/myo.hpp>
+#include "myo/myo.hpp"
 
 class DataCollector : public myo::DeviceListener {
 public:

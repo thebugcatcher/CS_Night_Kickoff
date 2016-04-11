@@ -114,7 +114,6 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
   - ``
     function onPoseEdge(pose, edge)
       myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
-
       if (edge == "on") then
         if (pose == "waveOut") then
           onWaveOut()
@@ -133,17 +132,14 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
       myo.debug("Next")
       myo.keyboard("tab", "press")
     end
-
     function onWaveIn()
       myo.debug("Previous")
       myo.keyboard("tab","press","shift")
     end
-
     function onFist()
       myo.debug("Enter")
       myo.keyboard("return","press")
     end
-
     function onFingersSpread()
       myo.debug("Escape")
       myo.keyboard("escape", "press")
@@ -169,9 +165,7 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
 - ``
   function onPoseEdge(pose, edge)
     myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
-
     pose = conditionallySwapWave(pose)
-
     if (edge == "on") then
       if (pose == "waveOut") then
         onWaveOut()
@@ -187,6 +181,63 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
   ``
 -  A useful technique is to give yourself a little vibration feedback whenever a gesture is detected. The best way to do that is with myo.notifyUserAction().
 - You can make the Myo armband vibrate with the myo.vibrate(vibrationType) function, where vibrationType can be one of short, medium or long.
+
+- By default, until a user does the unlock gesture with an application running that can accept Myo input, none of the other poses are detected or let through. This is the standard unlock policy.  If that flow doesn’t work for your script (for example, if you are controlling a game where the Myo should be active at all times), you can disable this behaviour by setting the lock policy:
+    - myo.setLockingPolicy("none")
+    - You can turn it back on with: myo.setLockingPolicy("standard")
+
+- You may want to let user hold a single gesture (like to adjust the volume) or enter a series of commands. This is pretty straightforward to accomplish with the myo.unlock(unlockType) function. This will let you programatically unlock (or keep unlocked) a Myo armband. You can send either timed or hold. timed will reset the clock and keep the armband unlocked for a few more seconds, and hold will keep it unlocked until you manually lock it (or set it back to timed and wait).
+
+- onPoseEdge gives you either on or off, while myo.keyboard() needs either down or up.
+
+# Final script:
+
+``
+function onPoseEdge(pose, edge)
+  myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
+
+  pose = conditionallySwapWave(pose)
+
+  local keyEdge = edge == "off" and "up" or "down"
+
+  if (pose == "waveOut") then
+      onWaveOut(keyEdge)
+  elseif (pose == "waveIn") then
+      onWaveIn(keyEdge)
+  elseif (pose == "fist") then
+      onFist(keyEdge)
+  elseif (pose == "fingersSpread") then
+      onFingersSpread(keyEdge)
+  end
+end
+
+function onWaveOut(keyEdge)
+  myo.debug("Next")
+  --myo.vibrate("short")
+  myo.keyboard("tab", keyEdge)
+end
+
+function onWaveIn(keyEdge)
+  myo.debug("Previous")
+  --myo.vibrate("short")
+  --myo.vibrate("short")
+  myo.keyboard("tab",keyEdge,"shift")
+end
+
+function onFist(keyEdge)
+  myo.debug("Enter")
+  --myo.vibrate("medium")
+  myo.keyboard("return",keyEdge)
+end
+
+function onFingersSpread(keyEdge)
+  myo.debug("Escape")
+  --myo.vibrate("long")
+  myo.keyboard("escape", keyEdge)
+end
+``
+
+
 
 
 

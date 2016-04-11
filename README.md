@@ -67,6 +67,39 @@ Now, there are a few different predefined “callbacks” you can implement in M
 
       end
     - The job of onForegroundWindow is to let you determine if your script should be active or not. The idea is that each script is targeted at a certain app (or set of apps), so onForegroundWindow fires every time a new app is in the foreground. app is the bundle identifier on Mac OS X or the name of the .exe file on Windows and title is the actual title of the foreground window.
+    - If you detect an app your script supports, return true.
+    - Following script will just print the app's name and title.
+    - ``
+      scriptId = 'com.thalmic.examples.myfirstscript'
+      scriptTitle = "My First Script"
+      scriptDetailsUrl = ""
+
+      function onForegroundWindowChange(app, title)
+          myo.debug("onForegroundWindowChange: " .. app .. ", " .. title)
+          return true
+      end
+      ``
+
+
+Myo scripts have a global myo object defined. This is where all the myo-specific functions live. One of these is debug, which accepts a string to output to a special console window that will pop up as soon as you start writing to it, but ONLY if you have “Developer Mode” enabled in Myo Connect’s Preferences.
+
+Make sure you re-add it every time you change (and save) something in your script
+
+With Myo armband you can currently do five hand poses: Wave out, wave in, fist, fingers spread and double tap.
+
+- To actually detect a pose, we’ll use the second of our predefined callbacks: onPoseEdge.
+  - function onPoseEdge(pose, edge)
+
+    end
+  - edge will be set to on when a pose starts, and off when the user releases it. This will let you do things like start listening for changes in yaw to do something when the user makes a fist and stopping once they let go.
+  - Currently, pose can have one of the following values:
+    waveIn, waveOut, fist, doubleTap, fingersSpread, rest and unknown
+  - Following script prints pose and edge.
+  - ``
+    function onPoseEdge(pose, edge)
+      myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
+    end
+    ``
 
 
 

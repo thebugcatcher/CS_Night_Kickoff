@@ -69,7 +69,7 @@ Now, there are a few different predefined “callbacks” you can implement in M
     - The job of onForegroundWindow is to let you determine if your script should be active or not. The idea is that each script is targeted at a certain app (or set of apps), so onForegroundWindow fires every time a new app is in the foreground. app is the bundle identifier on Mac OS X or the name of the .exe file on Windows and title is the actual title of the foreground window.
     - If you detect an app your script supports, return true.
     - Following script will just print the app's name and title.
-    - ``
+    - ```
       scriptId = 'com.thalmic.examples.myfirstscript'
       scriptTitle = "My First Script"
       scriptDetailsUrl = ""
@@ -77,7 +77,7 @@ Now, there are a few different predefined “callbacks” you can implement in M
           myo.debug("onForegroundWindowChange: " .. app .. ", " .. title)
           return true
       end
-      ``
+      ```
 
 
 Myo scripts have a global myo object defined. This is where all the myo-specific functions live. One of these is debug, which accepts a string to output to a special console window that will pop up as soon as you start writing to it, but ONLY if you have “Developer Mode” enabled in Myo Connect’s Preferences.
@@ -94,13 +94,13 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
   - Currently, pose can have one of the following values:
     waveIn, waveOut, fist, doubleTap, fingersSpread, rest and unknown
   - Following script prints pose and edge.
-  - ``
+  - ```
     function onPoseEdge(pose, edge)
       myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
     end
-    ``
+    ```
   - If statements in LUA:
-  - ``
+  - ```
     if  then
         -- do something
     elseif  then
@@ -108,10 +108,10 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
     else
         -- do something else
     end
-    ``
+    ```
 
 - Example of onPoseEdge():
-  - ``
+  - ```
     function onPoseEdge(pose, edge)
       myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
       if (edge == "on") then
@@ -126,8 +126,8 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
         end
       end
     end
-    ``
-  - ``
+    ```
+  - ```
     function onWaveOut()
       myo.debug("Next")
       myo.keyboard("tab", "press")
@@ -144,12 +144,12 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
       myo.debug("Escape")
       myo.keyboard("escape", "press")
     end
-    ``
+    ```
 
 - myo.getArm() returns left, right or unknown
 - Write a helper function that switches waveOut for waveIn and waveIn for waveOut if the user is wearing their Myo on their left arm, and call it before your logic handling which pose the user just did
 - helper function:
-- ``
+- ```
   function conditionallySwapWave(pose)
     if myo.getArm() == "left" then
       if pose == "waveIn" then
@@ -160,9 +160,9 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
     end
     return pose
   end
-  ``
+  ```
 - New onPoseEdge():
-- ``
+- ```
   function onPoseEdge(pose, edge)
     myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
     pose = conditionallySwapWave(pose)
@@ -178,7 +178,7 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
       end
     end
   end
-  ``
+  ```
 -  A useful technique is to give yourself a little vibration feedback whenever a gesture is detected. The best way to do that is with myo.notifyUserAction().
 - You can make the Myo armband vibrate with the myo.vibrate(vibrationType) function, where vibrationType can be one of short, medium or long.
 
@@ -192,7 +192,7 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
 
 # Final script:
 
-``
+```
 function onPoseEdge(pose, edge)
   myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
 
@@ -235,7 +235,7 @@ function onFingersSpread(keyEdge)
   --myo.vibrate("long")
   myo.keyboard("escape", keyEdge)
 end
-``
+```
 
 
 

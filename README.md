@@ -52,5 +52,21 @@ Myo Connect interacts with scripts through two primary mechanisms: Callback func
 
 There are a few global variables that are used to communicate between scripts and Myo Connect. Myo Connect provides the platform variable to indicate which platform it is running on.
 
+# MYO script tutorial
+
+- scriptId = 'com.thalmic.examples.myfirstscript': Reverse domain name, needs to be unique for a script to be released
+- scriptTitle = 'Name': This actually shows up in the application manager
+- scriptDetailsUrl = '': url for details of the script
+
+Now, there are a few different predefined “callbacks” you can implement in Myo Script. These are special functions that will get called for you in response to certain events. In Myo scripts there is no “main” method or anything like that. Technically any code written outside of a function will be executed when the script is first loaded by the Myo Script Manager (that’s how scriptId is getting set), but all of our actual work will be done from these callbacks.
+
+- To define a function in Lua, you just write function <function name>(<argument 1>, <argument 2>, <… etc>) on a new line and end the function with end on it’s own line
+
+- onForegroundWindowChange has two arguments, app and title. Since this is a callback defined by Myo Script, we can’t change this at all.
+    - function onForegroundWindowChange(app, title)
+
+      end
+    - The job of onForegroundWindow is to let you determine if your script should be active or not. The idea is that each script is targeted at a certain app (or set of apps), so onForegroundWindow fires every time a new app is in the foreground. app is the bundle identifier on Mac OS X or the name of the .exe file on Windows and title is the actual title of the foreground window.
+
 
 

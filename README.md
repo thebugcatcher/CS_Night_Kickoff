@@ -99,6 +99,94 @@ With Myo armband you can currently do five hand poses: Wave out, wave in, fist, 
       myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
     end
     ``
+  - If statements in LUA:
+  - ``
+    if  then
+        -- do something
+    elseif  then
+        -- do something if something else is true
+    else
+        -- do something else
+    end
+    ``
+
+- Example of onPoseEdge():
+  - ``
+    function onPoseEdge(pose, edge)
+      myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
+
+      if (edge == "on") then
+        if (pose == "waveOut") then
+          onWaveOut()
+        elseif (pose == "waveIn") then
+          onWaveIn()
+        elseif (pose == "fist") then
+          onFist()
+        elseif (pose == "fingersSpread") then
+          onFingersSpread()
+        end
+      end
+    end
+    ``
+  - ``
+    function onWaveOut()
+      myo.debug("Next")
+      myo.keyboard("tab", "press")
+    end
+
+    function onWaveIn()
+      myo.debug("Previous")
+      myo.keyboard("tab","press","shift")
+    end
+
+    function onFist()
+      myo.debug("Enter")
+      myo.keyboard("return","press")
+    end
+
+    function onFingersSpread()
+      myo.debug("Escape")
+      myo.keyboard("escape", "press")
+    end
+    ``
+
+- myo.getArm() returns left, right or unknown
+- Write a helper function that switches waveOut for waveIn and waveIn for waveOut if the user is wearing their Myo on their left arm, and call it before your logic handling which pose the user just did
+- helper function:
+- ``
+  function conditionallySwapWave(pose)
+    if myo.getArm() == "left" then
+      if pose == "waveIn" then
+          pose = "waveOut"
+      elseif pose == "waveOut" then
+          pose = "waveIn"
+      end
+    end
+    return pose
+  end
+  ``
+- New onPoseEdge():
+- ``
+  function onPoseEdge(pose, edge)
+    myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
+
+    pose = conditionallySwapWave(pose)
+
+    if (edge == "on") then
+      if (pose == "waveOut") then
+        onWaveOut()
+      elseif (pose == "waveIn") then
+        onWaveIn()
+      elseif (pose == "fist") then
+        onFist()
+      elseif (pose == "fingersSpread") then
+        onFingersSpread()
+      end
+    end
+  end
+  ``
+-  A useful technique is to give yourself a little vibration feedback whenever a gesture is detected. The best way to do that is with myo.notifyUserAction().
+- You can make the Myo armband vibrate with the myo.vibrate(vibrationType) function, where vibrationType can be one of short, medium or long.
 
 
 
